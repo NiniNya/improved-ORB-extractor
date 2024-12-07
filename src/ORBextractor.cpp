@@ -784,7 +784,7 @@ void ORBextractor::ComputeKeyPointsOctTree(vector<vector<KeyPoint> >& allKeypoin
                 if(vKeysCell.empty())
                 {
                     // 动态计算 minThFAST
-                    // minThFAST = DynamicMinThFAST(mvImagePyramid[level], iniX, iniY, maxX, maxY);
+                    minThFAST = DynamicMinThFAST(mvImagePyramid[level], iniX, iniY, maxX, maxY);
                     // cout << "minThFAST: " << minThFAST << endl;
 
                     FAST(mvImagePyramid[level].rowRange(iniY,maxY).colRange(iniX,maxX),
