@@ -72,6 +72,8 @@ protected:
                                            const int &maxX, const int &minY, const int &maxY, const int &nFeatures, const int &level);
 
     void ComputeKeyPointsOld(std::vector<std::vector<cv::KeyPoint> >& allKeypoints);
+
+    int DynamicMinThFAST(const cv::Mat& image, int iniX, int iniY, int maxX, int maxY);
     std::vector<cv::Point> pattern;
 
     int nfeatures;

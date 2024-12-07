@@ -713,6 +713,25 @@ vector<cv::KeyPoint> ORBextractor::DistributeOctTree(const vector<cv::KeyPoint>&
     return vResultKeys;
 }
 
+int ORBextractor::DynamicMinThFAST(const cv::Mat& image, int iniX, int iniY, int maxX, int maxY) {
+    // 提取子图像区域
+    Mat subImage = image.rowRange(iniY, maxY).colRange(iniX, maxX);
+
+    // 计算灰度均值
+    Scalar meanScalar = mean(subImage);
+    double meanValue = meanScalar[0];
+
+    // 计算灰度均方根
+    cv::Mat temp;
+    pow(subImage - meanValue, 2, temp);
+    Scalar meanSquare = mean(temp);
+    double rms = sqrt(meanSquare[0]);
+
+    // 返回灰度均方根作为 minThFAST
+    int minThFAST = std::max(static_cast<int>(rms), 2);
+    return std::min(minThFAST, 7);
+}
+
 void ORBextractor::ComputeKeyPointsOctTree(vector<vector<KeyPoint> >& allKeypoints)
 {
     allKeypoints.resize(nlevels);
@@ -764,6 +783,10 @@ void ORBextractor::ComputeKeyPointsOctTree(vector<vector<KeyPoint> >& allKeypoin
 
                 if(vKeysCell.empty())
                 {
+                    // 动态计算 minThFAST
+                    // minThFAST = DynamicMinThFAST(mvImagePyramid[level], iniX, iniY, maxX, maxY);
+                    // cout << "minThFAST: " << minThFAST << endl;
+
                     FAST(mvImagePyramid[level].rowRange(iniY,maxY).colRange(iniX,maxX),
                          vKeysCell,minThFAST,true);
                 }
